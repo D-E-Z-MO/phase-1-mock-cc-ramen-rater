@@ -19,14 +19,15 @@ const createMenuImage = ramen => {
   img.src = ramen.image
   img.id = ramen.name
   img.alt = ramen .id
+  img.addEventListener("click", handleUpdateDetail)
   ramenMenu.append(img)
 }
 
 // add event to menu image items
 const ramenDetail = document.getElementById("ramen-detail")
 const ramenName = ramenDetail.querySelector(".name")
-const ramenDetailImage = ramenDetail.querySelector("img")
-const ramenRestaurant = ramenDetail.querySelector("h3")
+const ramenDetailImage = ramenDetail.querySelector(".detail-img")
+const ramenRestaurant = ramenDetail.querySelector(".restaurant")
 const rating = document.getElementById("rating-display")
 const comment = ramenDetail.querySelector('comment')
 
@@ -43,19 +44,21 @@ const handleUpdateDetail = (event) => {
   fetchARamen(event.target.id)
 }
 const fetchARamen = (id) => {
-  fetch("http://localhost.3000/ramens/" + id)
+  fetch("http://localhost.3000/ramens" + id)
   .then(res => res.json())
   .then((ramen) => {
   console.log(ramen);
-  updateDetail(ramen);
+  handleUpdateDetail(ramen);
+  }).catch(e => {
+    console.log(e)
   });
 };
 
-
 const form = document.getElementById("new-ramen")
 
+
 const handleSubmit = event => {
-  event.preventDefaulty()
+  event.preventDefault()
   const ramenObj = {
     name:form[0].value,
     restaurant: form[1].value,
@@ -63,7 +66,10 @@ const handleSubmit = event => {
     rating: form[3].value,
     comment: form[4].value,
   }
+  createMenuImage(ramenObj)
+  form.reset()
 }
+
 
 const init = () => {
   fetchAllRamens();
